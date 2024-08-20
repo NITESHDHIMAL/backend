@@ -6,6 +6,12 @@ const Product = require('./model/productModel');
 
 const app = express();
 app.use(express.json())
+
+const {multer, storage} = require('./middleware/multerConfig')
+
+
+const upload = multer({storage: storage})
+
  
 connectDatabase()
 
@@ -15,7 +21,7 @@ app.get( "/", ( req, res ) =>  {
     })
 })
 
-app.post("/product", async (req,res) =>{
+app.post("/product", upload.single('image') , async (req,res) =>{
     console.log(req.body)
 
     const { name, price, description, image  } = req.body
@@ -32,7 +38,8 @@ app.post("/product", async (req,res) =>{
 })
 
 
- 
+
+
 app.listen(process.env.PORT, ()=> {
     console.log("Server started")
 })
