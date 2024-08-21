@@ -38,8 +38,6 @@ app.post("/product", upload.single('image') , async (req,res) =>{
 })
 
 
-
-
 app.listen(process.env.PORT, ()=> {
     console.log("Server started")
 })
