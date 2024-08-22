@@ -23,6 +23,27 @@ app.get( "/product", async ( req, res ) =>  {
     })
 })
 
+app.get("/product/:id", async(req, res)=> {
+    const {id} = req.params;
+    productwithid = await Product.findById(id);
+
+    res.status(200).json({
+        message: "Product fetched successfully!",
+        data: productwithid
+    })
+})
+
+app.delete("/product/:id", async(req, res)=> {
+    const {id} = req.params;
+    deleteproduct = await Product.findByIdAndDelete(id);
+
+    res.status(200).json({
+        message: "Product delelted successfully!",
+        data: deleteproduct
+    })
+})
+
+
 app.post("/product", upload.single('image') , async (req,res) =>{
     console.log(req.body)
     console.log(req.file)
