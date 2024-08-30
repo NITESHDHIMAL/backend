@@ -17,11 +17,57 @@ connectDatabase()
 
 
 app.get("/product", async (req, res) => {
-    const products = await Product.find()
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 2;
+
+    const skip = (page - 1) * limit;
+
+    const products = await Product.find().skip(skip).limit(limit);
+
+    const total = await Product.countDocuments();
+
+
     res.json({
         message: "Product fetched successfully",
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+        totalItems: total,
         data: products
     })
+})
+
+
+app.get("/product/search", async (req, res) => {
+
+    const { q } = req.query
+
+    if(!q) {
+       return res.json({
+            message: "Product not found."
+        });
+    } 
+
+    try {
+        const products = await Product.find({
+            $or: [
+                { name: { $regex: q, $options: "i" } },
+                { description: { $regex: q, $options: "i" } },
+            ],
+        })
+
+        res.status(200).json({
+            message: "Search results fetched successfully",
+            data: products
+
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: "An error occurred while searching for products."
+        })
+    }
+
+
 })
 
 app.get("/product/:id", async (req, res) => {
@@ -32,7 +78,7 @@ app.get("/product/:id", async (req, res) => {
         return res.json({
             message: "Product not found!"
         })
-    } 
+    }
 
     res.status(200).json({
         message: "Product fetched successfully!",
