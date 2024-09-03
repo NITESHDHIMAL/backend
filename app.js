@@ -7,7 +7,8 @@ const Product = require('./model/productModel');
 const app = express();
 app.use(express.json())
 
-const { multer, storage } = require('./middleware/multerConfig')
+const { multer, storage } = require('./middleware/multerConfig');
+const User = require('./model/userModel');
 
 
 const upload = multer({ storage: storage })
@@ -42,11 +43,11 @@ app.get("/product/search", async (req, res) => {
 
     const { q } = req.query
 
-    if(!q) {
-       return res.json({
+    if (!q) {
+        return res.json({
             message: "Product not found."
         });
-    } 
+    }
 
     try {
         const products = await Product.find({
@@ -136,6 +137,51 @@ app.post("/product", upload.single('image'), async (req, res) => {
     })
 
 })
+
+
+// Register a new user 
+app.post("/register", async (req, res) => {
+
+    const { name, email, password } = req.body;
+
+
+    try {
+        // check if the user already exists 
+        let user = await User.findOne({ email });
+
+        if (user) {
+            return res.status(400).json({
+                message: "User already exists"
+            })
+        };
+
+        // create a new user 
+        user = new User({
+            name,
+            email,
+            password
+        })
+
+        await user.save();
+
+        res.status(201).json({
+            message: "User registered successfully",
+            data: user,
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Server error",
+            error: error.message
+        })
+    }
+
+ 
+
+
+});
+
+
 
 
 app.listen(process.env.PORT, () => {
