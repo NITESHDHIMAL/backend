@@ -9,10 +9,7 @@ app.use(express.json())
 
 const { multer, storage } = require('./middleware/multerConfig');
 const User = require('./model/userModel');
-<<<<<<< HEAD
 const jwt = require("jsonwebtoken");
-=======
->>>>>>> 3e8fcea43ca396931ee7ca6714fdba880e580d56
 
 
 const upload = multer({ storage: storage })
@@ -47,11 +44,11 @@ app.get("/product/search", async (req, res) => {
 
     const { q } = req.query
 
-    if (!q) {
-        return res.json({
+    if(!q) {
+       return res.json({
             message: "Product not found."
         });
-    }
+    } 
 
     try {
         const products = await Product.find({
@@ -203,6 +200,7 @@ app.post("/login", async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 });
+
 
 
 
