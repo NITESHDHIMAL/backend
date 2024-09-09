@@ -19,6 +19,18 @@ connectDatabase()
 const protectroute = require("./authMiddleware");
 
 
+const corsOptions = {
+  origin: ['http://localhost:5173', 'https://backend-xm6p.onrender.com'], // Allow both frontend and backend origins
+  methods: 'GET,POST,PUT,DELETE', // Specify allowed methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
+  credentials: true, // Allow cookies/auth headers to be sent
+};
+
+// Use CORS middleware
+app.use(cors(corsOptions));
+
+
+
 app.get("/product", async (req, res) => {
 
   const page = parseInt(req.query.page) || 1;
@@ -284,15 +296,6 @@ app.delete('/cart', protectroute, async (req, res) => {
   }
 });
 
-const corsOptions = {
-  origin: ['http://localhost:5173', 'https://backend-xm6p.onrender.com'], // Allow both frontend and backend origins
-  methods: 'GET,POST,PUT,DELETE', // Specify allowed methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
-  credentials: true, // Allow cookies/auth headers to be sent
-};
-
-// Use CORS middleware
-app.use(cors(corsOptions));
 
 app.listen(process.env.PORT, () => {
   console.log("Server started")
