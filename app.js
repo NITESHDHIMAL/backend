@@ -3,21 +3,21 @@ const express = require("express");
 const connectDatabase = require('./database');
 const Product = require('./model/productModel');
 const Cart = require('./model/cartModel')
-
+const cors = require("cors")
 
 const app = express();
 app.use(express.json())
-
 const { multer, storage } = require('./middleware/multerConfig');
 const User = require('./model/userModel');
 const jwt = require("jsonwebtoken");
 
-
+// for file uploading 
 const upload = multer({ storage: storage })
 
 connectDatabase()
 
 const protectroute = require("./authMiddleware");
+
 
 app.get("/product", async (req, res) => {
 
@@ -284,6 +284,21 @@ app.delete('/cart', protectroute, async (req, res) => {
   }
 });
 
+
+// const corsOptions = {
+//   origin: 'https://backend-xm6p.onrender.com/', // Allow only this origin
+//   methods: 'GET,POST', // Allow specific methods
+//   allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
+// };
+
+const corsOptions = {
+  origin: ['http://localhost:8000/', 'https://backend-xm6p.onrender.com/'],
+  methods: 'GET,POST',
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+// cors middleware
+app.use(cors(corsOptions));
 
 app.listen(process.env.PORT, () => {
   console.log("Server started")
