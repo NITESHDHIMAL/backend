@@ -284,20 +284,14 @@ app.delete('/cart', protectroute, async (req, res) => {
   }
 });
 
-
-// const corsOptions = {
-//   origin: 'https://backend-xm6p.onrender.com/', // Allow only this origin
-//   methods: 'GET,POST', // Allow specific methods
-//   allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
-// };
-
 const corsOptions = {
-  origin: ['http://localhost:8000/', 'https://backend-xm6p.onrender.com/'],
-  methods: 'GET,POST',
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  origin: ['http://localhost:5173', 'https://backend-xm6p.onrender.com'], // Allow both frontend and backend origins
+  methods: 'GET,POST,PUT,DELETE', // Specify allowed methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
+  credentials: true, // Allow cookies/auth headers to be sent
 };
 
-// cors middleware
+// Use CORS middleware
 app.use(cors(corsOptions));
 
 app.listen(process.env.PORT, () => {
